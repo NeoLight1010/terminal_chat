@@ -1,11 +1,11 @@
 import socket
 import threading
-from term_func import *
+from term_func import * # VARIABLE 'T' IS USED TO REFERENCE THE TERMINAL.
 
 PORT = 6166
 SERVER = "192.168.0.189" # socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
-HEADER = 64
+HEADER = 128
 FORMAT = "utf-8"
 DISCONNECT = "DISCONNECT"
 
@@ -21,11 +21,11 @@ def send_all_clients(msg, sender): # send data to ALL clients connected. msg: me
             client.send(msg)
 
 def handle_client(conn, addr):
-    print(medium_prior("[CLIENT CONNECTED]") + f": {addr}") # new connection alert
+    print(medium_prior("[CLIENT CONNECTED]:") + f" {addr}") # new connection alert
     clients_connected.append(conn)
     connected = True
 
-    discon_alert = medium_prior("[CLIENT DISCONNECTED]") + f": {addr} has disconnected. "
+    discon_alert = medium_prior("[CLIENT DISCONNECTED]:") + f" {addr} has disconnected. "
 
     while connected:
         msg_length = conn.recv(HEADER).decode(FORMAT)
@@ -35,9 +35,8 @@ def handle_client(conn, addr):
             msg = conn.recv(msg_length).decode(FORMAT)
 
             if msg != DISCONNECT:
-                print(f"({addr}): {msg}") # output message
+                print(low_prior("(" + str(addr) + "):") + f" {msg}") # output CLIENT's message
 
-                ############ TESTING ################
                 hist.append(msg) # add msg to client's message history
                 send_all_clients(hist[-1].encode(FORMAT), conn)
 
@@ -50,8 +49,8 @@ def handle_client(conn, addr):
     conn.close()
 
 def start():
-    print(high_prior("[STARTING]") + ": Server is starting...")
-    print(high_prior("[LISTENING]") + f": Server listening on {ADDR}")
+    print(high_prior("[STARTING]:") + " Server is starting...")
+    print(high_prior("[LISTENING]:") + f" Server listening on {ADDR}")
 
     server.listen()
 
@@ -59,6 +58,6 @@ def start():
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        print(medium_prior("[ACTIVE CONNECTIONS]") + f": {threading.activeCount() - 1}")
+        print(medium_prior("[ACTIVE CONNECTIONS]:") + f" {threading.activeCount() - 1}")
     
 start()
