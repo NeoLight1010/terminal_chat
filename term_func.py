@@ -12,3 +12,9 @@ def medium_prior(txt): # Medium priority texts as [STARTING] will be printed red
 
 def low_prior(txt): # Medium priority texts as [STARTING] will be printed red.
     return t.green(txt)
+
+def client_input(txt): # Text asking for client's input.
+    return t.blue(txt)
+
+def clr_scr():
+    print(t.clear())

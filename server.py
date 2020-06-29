@@ -37,12 +37,13 @@ def handle_client(conn, addr):
             if msg != DISCONNECT:
                 print(low_prior("(" + str(addr) + "):") + f" {msg}") # output CLIENT's message
 
-                hist.append(msg) # add msg to client's message history
-                send_all_clients(hist[-1].encode(FORMAT), conn)
+                hist.append((addr,msg)) # add msg to client's message history
+                send_all_clients(hist[-1][1].encode(FORMAT), conn)
 
             else: # if client disconnects
                 clients_connected.remove(conn)
                 print(discon_alert)
+                send_all_clients(DISCONNECT.encode(FORMAT), conn)
                 send_all_clients(discon_alert.encode(FORMAT), conn)
                 connected = False
 
@@ -59,5 +60,7 @@ def start():
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
         print(medium_prior("[ACTIVE CONNECTIONS]:") + f" {threading.activeCount() - 1}")
-    
-start()
+
+if __name__ == "__main__":
+    clr_scr()
+    start()
