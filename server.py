@@ -70,7 +70,9 @@ def start():
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        print(medium_prior("[ACTIVE CONNECTIONS]:") + f" {threading.activeCount() - 1}")
+        print(
+            medium_prior("[ACTIVE CONNECTIONS]:") + f" {threading.active_count() - 1}"
+        )
 
 
 if __name__ == "__main__":
